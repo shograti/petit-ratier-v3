@@ -37,11 +37,13 @@ class ShopRepository extends ServiceEntityRepository
     */
 
     
-    public function findOneBySomeField($value): array
+    public function findOneLike($value): array
     {
+        $value = "%".$value."%";
         return $this->createQueryBuilder('s')
             ->andWhere('s.name LIKE :val')
             ->setParameter('val', $value)
+            ->setMaxResults(5)
             ->getQuery()
             ->getResult()
         ;

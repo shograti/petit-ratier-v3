@@ -15,8 +15,8 @@ const CreateOffer = () => {
   const [shop, setShop] = useState(null);
   const [shops, setShops] = useState([]);
   const [categories, setCategories] = useState([]);
+/*   const [searchValue, setSearchValue] = useState(null); */
 
-  const [shopNameForAutocomplete, setShopNameForAutocomplete] = useState('');
 
   const [offer, setOffer] = useState({
     name: name,
@@ -31,16 +31,17 @@ const CreateOffer = () => {
     shop: shop,
   });
 
-  useEffect(() => {
-    axios
-    .get(`/api/shops/get`)
+ function getShops(searchValue){
+  axios.get('/api/shops/get', { params: { q: searchValue }})
     .then((response) => {
       setShops(response.data);
     })
     .catch((error) => {
       console.log(error);
     });
-  }, []);
+
+  }
+  
 
 
   useEffect(() => {
@@ -106,10 +107,12 @@ const CreateOffer = () => {
           label="Date de début de l'offre"
           value={startOffer}
           type="date"
+          InputLabelProps={{ shrink: true }}
           onInput={(e) => setStartOffer(e.target.value)}
         />
         <TextField
-          label="Date de début de l'offre"
+          InputLabelProps={{ shrink: true }}
+          label="Date de fin de l'offre"
           value={endOffer}
           type="date"
           onInput={(e) => setEndOffer(e.target.value)}
@@ -146,15 +149,20 @@ const CreateOffer = () => {
 
         
         <Autocomplete
+          
           id="shops"
           options={shops}
+          
           renderInput={(params) => (
             <TextField {...params} label="Magasin" variant="outlined" />
           )}
           
           getOptionLabel={(option) => option.name + " - " + option.comNom}
+          
+          onInputChange={(e)=>{getShops(e.target.value)} }
           value={shop}
           onChange={(_event, shop) => {
+            
             setShop(shop);
           }}/>
 

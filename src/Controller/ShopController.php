@@ -4,6 +4,7 @@ namespace App\Controller;
 
 
 use App\Repository\ShopRepository;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -22,9 +23,9 @@ class ShopController extends AbstractController
 
 
     #[Route('/get', name: 'get-shops')]
-    public function getOffers(): Response
+    public function getOffers(Request $request): Response
     {
-        $shops = $this->shop_repo->findOneBySomeField('Carrefour');
+        $shops = $this->shop_repo->findOneLike($request->query->get('q'));
         $json = $this->serializer->serialize($shops,'json');
         $response = new JsonResponse($json,200,[],true);
        
